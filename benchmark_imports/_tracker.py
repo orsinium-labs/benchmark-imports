@@ -31,9 +31,10 @@ class ModuleType(Enum):
 
 
 class Record(NamedTuple):
-    module: str         # the absolute module name as passed in the import machinery
-    type: ModuleType    # how the module is related to the one we track
-    time: float         # how long it took to import the module
+    module: str             # the absolute module name
+    type: ModuleType        # how the module is related to the one we track
+    time: float             # how long it took to import the module
+    parent: Optional[str]   # the name of the parent module
 
 
 class Tracker:
@@ -56,6 +57,7 @@ class Tracker:
                 module=module,
                 type=self._get_type(module=module, parent=parent),
                 time=total,
+                parent=parent,
             ))
 
     def sort(self) -> None:

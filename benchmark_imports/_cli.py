@@ -5,7 +5,9 @@ import sys
 from argparse import ArgumentParser
 from typing import NamedTuple, NoReturn, TextIO
 
+from ._colors import MAGENTA, END
 from ._imports import activate
+from ._tracker import ModuleType
 
 
 class Command(NamedTuple):
@@ -21,9 +23,12 @@ class Command(NamedTuple):
         tracker = activate(args.module_name)
         import_module(args.module_name)
         tracker.sort()
-        for r in tracker.records[:args.top]:
-            time = format(r.time, f'0.0{args.precision}f')
-            self._print(f'{time} {r.type.colored} {r.module}')
+        for rec in tracker.records[:args.top]:
+            time = format(rec.time, f'0.0{args.precision}f')
+            line = f'{time} {rec.type.colored} {MAGENTA}{rec.module:40}{END}'
+            if rec.parent and rec.type == ModuleType.TRANSITIVE:
+                line += f' from {MAGENTA}{rec.parent}{END}'
+            self._print(line)
         return 0
 
     def _print(self, *args, end: str = "\n") -> None:
