@@ -3,7 +3,7 @@
 from contextlib import contextmanager
 from enum import Enum
 from time import perf_counter
-from typing import Iterator, List, NamedTuple, Optional
+from typing import Iterator, List, NamedTuple, Optional, Tuple
 from . import _colors
 
 
@@ -38,12 +38,14 @@ class Record(NamedTuple):
 
 
 class Tracker:
-    __slots__ = ('records', '_root')
+    __slots__ = ('records', '_root', 'errors')
     records: List[Record]
+    errors: List[Tuple[str, Exception]]
     _root: str
 
     def __init__(self, root: str) -> None:
         self.records = []
+        self.errors = []
         self._root = root
 
     @contextmanager
@@ -59,6 +61,9 @@ class Tracker:
                 time=total,
                 parent=parent,
             ))
+
+    def record_error(self, module: str, error: Exception) -> None:
+        self.errors.append((module, error))
 
     def sort(self) -> None:
         self.records.sort(key=lambda r: r.time, reverse=True)

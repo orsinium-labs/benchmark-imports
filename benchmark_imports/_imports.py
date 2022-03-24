@@ -21,7 +21,10 @@ class BenchFinder(MetaPathFinder):
         for finder in sys.meta_path:
             if finder is self:
                 continue
-            spec = finder.find_spec(*args, **kwargs)
+            try:
+                spec = finder.find_spec(*args, **kwargs)
+            except AttributeError:
+                continue
             if spec is None:
                 continue
             if isinstance(spec.loader, SourceFileLoader):
@@ -42,7 +45,11 @@ class BenchLoader(Loader):
     def exec_module(self, module: ModuleType) -> None:
         with self._stack.context(module.__name__) as parent:
             with self._tracker.track(module=module.__name__, parent=parent):
-                return self._loader.exec_module(module)
+                try:
+                    self._loader.exec_module(module)
+                except Exception as exc:
+                    self._tracker.record_error(module.__name__, exc)
+                    raise
 
 
 def activate(root_module: str) -> Tracker:

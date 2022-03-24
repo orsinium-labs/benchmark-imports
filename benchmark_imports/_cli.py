@@ -5,7 +5,7 @@ import sys
 from argparse import ArgumentParser
 from typing import NamedTuple, NoReturn, TextIO
 
-from ._colors import MAGENTA, END
+from ._colors import MAGENTA, RED, END
 from ._imports import activate
 from ._tracker import ModuleType
 
@@ -29,6 +29,12 @@ class Command(NamedTuple):
             if rec.parent and rec.type == ModuleType.TRANSITIVE:
                 line += f' from {MAGENTA}{rec.parent}{END}'
             self._print(line)
+
+        if tracker.errors:
+            self._print('\nImport-time errors that were handled by modules:')
+        for module, error in tracker.errors:
+            etype = type(error).__name__
+            self._print(f'{MAGENTA}{module}{END}: {RED}{etype}: {error}{END}')
         return 0
 
     def _print(self, *args, end: str = "\n") -> None:
