@@ -30,6 +30,8 @@ python3 -m benchmark_imports numpy
 + To be able to import your module and all its dependencies, the tool has to be installed in the same environment as the tested module and all its dependencies.
 + Keep in mind that the tool actually imports and executes the given module and all its dependencies. So, don't run it on untrusted code or code that can break something at import time.
 + The tool will report you at the end the list of errors that occured in some modules when importing them but were suppressed by other modules. It doesn't mean something is broken. For example, it can indicate that the library has an optional dependency that it tries to import but just ignores if unavailable. However, that means that on some environment the module will be successfully imported, and so the import time may be different.
++ To avoid starting your service when it's imported by the tool, put the startup logic inside `if __name__ == "__main__"` block.
++ A module is executed by Python only when it's imported in the very first time. So, if you change the order of imports or remove some, you may see different parents for dependencies because they will be loaded from whatever module imports them first.
 
 ## Improving import time
 
