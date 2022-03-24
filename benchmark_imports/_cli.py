@@ -1,11 +1,11 @@
 from __future__ import annotations
-from importlib import import_module
 
 import sys
 from argparse import ArgumentParser
+from importlib import import_module
 from typing import NamedTuple, NoReturn, TextIO
 
-from ._colors import MAGENTA, RED, END
+from ._colors import END, MAGENTA, RED
 from ._imports import activate
 from ._tracker import ModuleType
 
@@ -20,6 +20,7 @@ class Command(NamedTuple):
         parser.add_argument("--precision", type=int, default=4)
         parser.add_argument("module_name")
         args = parser.parse_args(self.argv)
+
         tracker = activate(args.module_name)
         import_module(args.module_name)
         tracker.sort()

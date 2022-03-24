@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from enum import Enum
 from time import perf_counter
 from typing import Iterator, List, NamedTuple, Optional, Tuple
+
 from . import _colors
 
 

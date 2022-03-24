@@ -1,11 +1,14 @@
+import sys
 from importlib.abc import Loader, MetaPathFinder
 from importlib.machinery import ModuleSpec
-import sys
 from types import ModuleType
 from typing import Optional
-from ._tracker import Tracker
+
+from _frozen_importlib_external import \
+    SourceFileLoader  # pyright: reportMissingImports=false
+
 from ._stack import Stack
-from _frozen_importlib_external import SourceFileLoader  # pyright: reportMissingImports=false
+from ._tracker import Tracker
 
 
 class BenchFinder(MetaPathFinder):
