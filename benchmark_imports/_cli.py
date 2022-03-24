@@ -16,7 +16,7 @@ class Command(NamedTuple):
 
     def run(self) -> int:
         parser = ArgumentParser()
-        parser.add_argument("--top", type=int, default=20)
+        parser.add_argument("--top", type=int, default=25)
         parser.add_argument("--precision", type=int, default=4)
         parser.add_argument("module_name")
         args = parser.parse_args(self.argv)

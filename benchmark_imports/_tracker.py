@@ -69,7 +69,9 @@ class Tracker:
         self.records.sort(key=lambda r: r.time, reverse=True)
 
     def _get_type(self, *, module: Optional[str], parent: Optional[str]) -> ModuleType:
-        if module == self._root or module is None:
+        if module is None:
+            return ModuleType.ROOT
+        if module == self._root or self._root.startswith(f'{module}.'):
             return ModuleType.ROOT
         if module.startswith(f'{self._root}.'):
             return ModuleType.PROJECT
